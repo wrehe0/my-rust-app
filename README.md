@@ -234,7 +234,7 @@ Dockerfile
 - Перейдите на вкладку **Actions** в вашем репозитории на **GitHub**. Вы увидите, как ваш **Workflow** запустился, а через несколько минут загорится **зеленая** галочка, которая означает, что все шаги прошли успешно
 - Если ваш **Workflow** стал красным - исправьте ошибки и запуштесь снова
 
-![Скрин](/content/DevOps/CI_CD/img/11_workflow.png)
+![alt text](image.png)
 
 ### 10. Проверить сборку Docker-образа локально
 
@@ -252,13 +252,13 @@ docker images | grep my-rust-app
 ```shell
 docker run --rm my-rust-app:latest
 ```
-![Hello from my Rus app!](/content/DevOps/CI_CD/img/9_workflow.png)
+![alt text](image-1.png)
 
 войти в контейнер в интерактивном режиме
 ```shell
 docker run -it --rm --entrypoint /bin/bash my-rust-app:latest
 ```
-![Hello from my Rus app!](/content/DevOps/CI_CD/img/10_workflow.png)
+![alt text](image-2.png)
 
 выйти из контейнера:
 ```shell

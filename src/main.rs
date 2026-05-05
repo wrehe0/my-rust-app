@@ -7,3 +7,4 @@ fn main() {
     // Небольшая задержка для гарантии вывода в контейнере
     std::thread::sleep(std::time::Duration::from_millis(200));
 }
+
