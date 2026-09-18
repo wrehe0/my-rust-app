@@ -12,10 +12,46 @@ env:
   IMAGE_NAME: my-rust-app
 
 jobs:
+  # Job 0: Диагностика окружения (временный, для отладки)
+  diagnose:
+    name: Diagnose Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show runner info
+        run: |
+          echo "=== Runner OS ==="
+          uname -a
+          echo "=== Whoami ==="
+          whoami
+          echo "=== PATH ==="
+          echo "$PATH"
+          echo "=== which cargo (before setup) ==="
+          which cargo || echo "cargo NOT found before setup"
+          echo "=== which rustc (before setup) ==="
+          which rustc || echo "rustc NOT found before setup"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Show cargo version (after setup)
+        run: |
+          echo "=== which cargo (after setup) ==="
+          which cargo || echo "cargo STILL not found after setup"
+          echo "=== cargo --version ==="
+          cargo --version || echo "cargo --version FAILED"
+          echo "=== rustc --version ==="
+          rustc --version || echo "rustc --version FAILED"
+
   # Job 1: Линтинг и форматирование
   lint:
     name: Lint & Format
     runs-on: ubuntu-latest
+    needs: diagnose
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,6 +60,11 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+
+      - name: Verify cargo is available
+        run: |
+          which cargo
+          cargo --version
 
       - name: Check formatting
         run: cargo fmt --all -- --check
@@ -43,19 +84,20 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      # Быстрая проверка типов (экономит время при ошибках)
+      - name: Verify cargo is available
+        run: |
+          which cargo
+          cargo --version
+
       - name: Check code (fast)
         run: cargo check --verbose
 
-      # Проверка debug-сборки
       - name: Check debug build
         run: cargo build --verbose
 
-      # Проверка release-сборки (важно для production)
       - name: Check release build
         run: cargo build --release --verbose
 
-      # Запуск тестов
       - name: Run tests
         run: cargo test --verbose
 
