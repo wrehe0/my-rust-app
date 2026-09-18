@@ -41,11 +41,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+        uses: dtolnay/rust-toolchain@stable
 
       # Быстрая проверка типов (экономит время при ошибках)
       - name: Check code (fast)
